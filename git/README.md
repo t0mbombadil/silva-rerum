@@ -7,6 +7,7 @@ Reset current credentials on git (otheriwse your push will be rejected)
 ```
 git config --system --unset credential.helper
 ```
+Now in place of password use your generated token
 
 ### Configure git for private mail (after checking it on Github account)
 src - https://stackoverflow.com/questions/43863522/error-your-push-would-publish-a-private-email-address
