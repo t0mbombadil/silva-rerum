@@ -114,7 +114,7 @@ Function Start-FileSystemWatcher {
       Write-Output "Writing to log file [$LogFile]"
       Write-Output "Listening changes on [$Path] started. [$EventName] [$(get-date -Format s)]`nStarting state:`n" | Out-File -FilePath $LogFile -Encoding $enc
   
-      $currentState = Get-ChildItem c:\temp | foreach { 
+      $currentState = Get-ChildItem $Path | foreach { 
           $Hash = Get-FileHash -path $_.FullName
           $_ |  Add-Member -MemberType NoteProperty -Name "Algorithm" -Value "$($Hash.Algorithm)"
           $_ |  Add-Member -MemberType NoteProperty -Name "Hash" -Value "$($Hash.Hash)"
