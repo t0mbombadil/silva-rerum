@@ -149,5 +149,4 @@ Function Start-FileSystemWatcher {
     }
   } 
   Start-FileSystemWatcher -Path "C:\temp" -EventName Created,Changed,Renamed,Deleted -Force
-        Write-Verbose "--- START [$($e.EventIdentifier)] $changeType $name $timeStamp"
   
