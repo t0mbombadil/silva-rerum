@@ -1,6 +1,7 @@
 #! /bin/sh
 # author: Clément Désiles
 # date: 01/08/2016
+# source: https://www.it-react.com/index.php/2020/01/06/how-to-setup-reverse-ssh-tunnel-on-linux/
 # source: https://gist.github.com/suma/8134207
 # source: http://stackoverflow.com/questions/34094792/autossh-pid-is-not-equal-to-the-one-in-pidfile-when-using-start-stop-daemon
 
