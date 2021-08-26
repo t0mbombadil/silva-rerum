@@ -7,6 +7,7 @@ DNS_SERVER_2="8.8.8.4"
 
 INTERFACES=(
 	eth0
+	wlan0
 )
 
 IPTABLES="/usr/sbin/iptables"
