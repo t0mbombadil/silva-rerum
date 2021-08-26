@@ -15,8 +15,11 @@ IPSET="ipset" # "/sbin/ipset" | "/usr/sbin/ipset"
 FQDNS_TO_ALLOW=(
 	cdn-aws.deb.debian.org
 	security.debian.org
+	debian.org
 	raspbian.raspberrypi.org
-
+	raspberrypi.org
+	scratch.mit.edu
+	translate.google.com
 )
 
 IPS_TO_ALLOW=(
@@ -109,8 +112,11 @@ function configure_iptables {
 	echo 3 > /proc/sys/net/ipv4/tcp_keepalive_probes
 	echo 10 > /proc/sys/net/ipv4/tcp_keepalive_intvl
 
-	echo >&2 "[INFO] Configure whitelist"
-	$IPSET create whitelist hash:net || true
+	echo >&2 "[INFO] Configure ip_whitelist"
+	$IPSET create ip_whitelist hash:net || true
+	
+	echo >&2 "[INFO] Configure dns_whitelist"
+	$IPSET create dns_whitelist hash:net || true
 
 	echo >&2 "[INFO] Configure iptables"
 	
@@ -149,15 +155,16 @@ function configure_iptables {
 			ip="${IPS_TO_ALLOW[$i]}"
 			if valid_ip "$ip"; then
 				# Add ip to whitellist
-				echo >&2 "[INFO] Adding raw $ip to ip whitelist"
-				$IPSET add whitelist "$ip" || true
+				echo >&2 "[INFO] Adding raw $ip to ip ip_whitelist"
+				$IPSET add ip_whitelist "$ip" || true
 			else
 				echo >&2 "[INFO] IP is not valid $ip"
 			fi
 		done
 
 		# Whitelist
-		$IPTABLES -o "$INT" -A OUTPUT -m set --match-set whitelist dst -j ACCEPT
+		$IPTABLES -o "$INT" -A OUTPUT -m set --match-set ip_whitelist dst -j ACCEPT
+		$IPTABLES -o "$INT" -A OUTPUT -m set --match-set dns_whitelist dst -j ACCEPT
 	
 		# Drop all other outgoing packages
 		$IPTABLES -o "$INT" -A OUTPUT -j DROP
@@ -176,8 +183,8 @@ function refresh_ips {
 
 		if valid_ip "$ip"; then
 			# Add ip to whitellist
-			echo >&2 "[INFO] Adding $ip for $fqdn to ip whitelist"
-			$IPSET add whitelist "$ip" || true
+			echo >&2 "[INFO] Adding $ip for $fqdn to ip dns_whitelist"
+			$IPSET add dns_whitelist "$ip" || true
 
 		host_file+="${ip} ${fqdn}\n"
 		else
@@ -193,8 +200,8 @@ function refresh_ips {
 	systemctl reload dnsmasq
 }
 
-function flush_whitelist {
-	$IPSET flush whitelist
+function flush_dns_whitelist {
+	$IPSET flush dns_whitelist
 	refresh_ips
 }
 
@@ -206,7 +213,7 @@ function configure_cronjob {
 	echo "*/10 * * * * root $0 refresh_ips >/var/log/firewall-refresh-ips.log 2>&1" > /etc/cron.d/firewall-refresh-ips
 
 	echo >&2 "[INFO] Setting up cronjob in /etc/cron.d/firewall-flush-ips"
-	echo "0 4 * * * root $0 flush_whitelist >/var/log/firewall-flush-ips.log 2>&1" > /etc/cron.d/firewall-flush-ips
+	echo "0 4 * * * root $0 flush_dns_whitelist >/var/log/firewall-flush-ips.log 2>&1" > /etc/cron.d/firewall-flush-ips
 }
 
 case "${1:-x}" in
@@ -216,7 +223,7 @@ case "${1:-x}" in
 	configure_iptables) configure_iptables ;;
 	configure_cronjob) configure_cronjob ;;
 	refresh_ips)  refresh_ips ;;
-	flush_whitelist) flush_whitelist ;;
+	flush_dns_whitelist) flush_dns_whitelist ;;
 	startup)
 		configure_dnsmasq
 		configure_iptables
@@ -238,7 +245,7 @@ case "${1:-x}" in
 		echo >&2 "$0 configure_iptables"
 		echo >&2 "$0 configure_cronjob"
 		echo >&2 "$0 refresh_ips"
-		echo >&2 "$0 flush_whitelist"
+		echo >&2 "$0 flush_dns_whitelist"
 		echo >&2 "$0 startup"
 		echo >&2 "$0 all"
 		exit 1
