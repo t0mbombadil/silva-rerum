@@ -1,0 +1,17 @@
+{
+    "configurations": [
+        {
+            "name": "Python: Django + pyenv vitualenvironments setup",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/server/manage.py",
+            "args": [
+                "runserver"
+            ],
+            "django": true,
+            "justMyCode": false,
+            "python.venvPath": "/Users/user1/.pyenv/versions/3.8.11",
+            "cwd": "${workspaceFolder}/server/",
+        }
+    ]
+}
