@@ -1,3 +1,18 @@
+
+## Different config per different urls
+```bash
+# ~/.gitconfig 
+# Require putting regular gitconfig into subdirectory ~/.gitconfigs/
+[includeIf "hasconfig:remote.*.url:https://bitbucket.org//**"]
+  path = ~/.gitconfigs/bitbucket
+
+[includeIf "hasconfig:remote.*.url:https://github.com//**"]
+  path = ~/.gitconfigs/github
+
+```
+
+
+
 ## Github - 2FA working with git push & not exposing email (private mail option)
 
 ### After setting up 2FA on github generate access token and use it for git
