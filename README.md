@@ -1,2 +1,2 @@
 # TOOLS
-Useful everyday use tools. Mostly scripts (bash / powershell / python)
+Useful everyday use tools & configs. Mostly scripts (bash / powershell / python)
