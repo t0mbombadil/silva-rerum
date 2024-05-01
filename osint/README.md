@@ -12,5 +12,5 @@ echo "1.1.1.1" | xargs -I "{}" sh -c 'echo "IP: {}" ; curl "https://talosintelli
 You can also open Talos & virus total urls in browser for more readable output
 ```bash
 # For MacOS
-echo "1.1.1.1" | xargs -I {} open 'https://talosintelligence.com/reputation_center/lookup?search={}' ; open 'https://www.virustotal.com/gui/ip-address/{}'
+echo "1.1.1.1" | xargs -I {} zsh -c "open 'https://talosintelligence.com/reputation_center/lookup?search={}' ; open 'https://www.virustotal.com/gui/ip-address/{}' "
 ```
